@@ -12,16 +12,33 @@ const __dirname = path.dirname(__filename);
 
 // console.log('FIREBASE_SERVICE_ACCOUNT', process.env.FIREBASE_SERVICE_ACCOUNT);
 
-// Read JSON manually
-const serviceAccount = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../firebaseServiceKey.json"), "utf8")
-);
-// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// Try to get service account from environment variable first
+let serviceAccount;
 
-// console.log(serviceAccount);
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } catch (error) {
+    console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable:", error);
+  }
+}
+
+// Fallback to file if not in environment variable
+if (!serviceAccount) {
+  try {
+    serviceAccount = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "../firebaseServiceKey.json"), "utf8")
+    );
+  } catch (error) {
+    console.error("Failed to load firebaseServiceKey.json:", error);
+    throw new Error("Firebase service account credentials missing. Set FIREBASE_SERVICE_ACCOUNT env var or ensure firebaseServiceKey.json exists.");
+  }
+}
 
 // Fix private key formatting (replace literal \n with real newlines)
-serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+if (serviceAccount.private_key) {
+  serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+}
 
 
 // Initialize Firebase Admin
