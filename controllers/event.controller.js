@@ -621,8 +621,8 @@ export const createCompleteEvent = async (req, res) => {
             amount: data.finalPrice,
             isFreePlan: false,
             paymentMethod: 'revenuecat',
-            provider: data.payment.platform,
-            revenueCatTransactionId: revenueCatTransactionId // Store the transaction ID to prevent reuse
+            provider: data.payment.platform || null,
+            revenueCatTransactionId: revenueCatTransactionId || null // Store the transaction ID to prevent reuse
           };
         } else {
           // Get payment record to verify it exists and belongs to this user
