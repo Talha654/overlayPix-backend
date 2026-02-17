@@ -32,8 +32,7 @@ const headers = {
  * Test 1: Create PayPal Order
  */
 async function testCreatePayPalOrder() {
-  console.log('\n=== Test 1: Create PayPal Order ===');
-  
+
   try {
     const response = await fetch(`${API_URL}/create-paypal-order`, {
       method: 'POST',
@@ -55,9 +54,9 @@ async function testCreatePayPalOrder() {
     console.log('Response:', JSON.stringify(data, null, 2));
 
     if (data.success && data.orderId) {
-      console.log('✅ PayPal order created successfully!');
-      console.log('Order ID:', data.orderId);
-      console.log('Approval URL:', data.approvalUrl);
+      // console.log('✅ PayPal order created successfully!');
+      // console.log('Order ID:', data.orderId);
+      // console.log('Approval URL:', data.approvalUrl);
       return data.orderId;
     } else {
       console.log('❌ Failed to create PayPal order');
@@ -74,7 +73,7 @@ async function testCreatePayPalOrder() {
  */
 async function testGetPayPalOrderStatus(orderId) {
   console.log('\n=== Test 2: Get PayPal Order Status ===');
-  
+
   if (!orderId) {
     console.log('⚠️  Skipping - no order ID available');
     return;
@@ -105,7 +104,7 @@ async function testGetPayPalOrderStatus(orderId) {
  */
 async function testCreatePayPalUpgradeOrder() {
   console.log('\n=== Test 3: Create PayPal Upgrade Order ===');
-  
+
   try {
     const response = await fetch(`${API_URL}/paypal-upgrade-order`, {
       method: 'POST',
@@ -147,7 +146,7 @@ async function testCreatePayPalUpgradeOrder() {
  */
 async function testDebugPayPalOrderStatus(orderId) {
   console.log('\n=== Test 4: Debug PayPal Order Status ===');
-  
+
   if (!orderId) {
     console.log('⚠️  Skipping - no order ID available');
     return;
@@ -179,7 +178,7 @@ async function testDebugPayPalOrderStatus(orderId) {
  */
 async function testServerHealth() {
   console.log('\n=== Test 5: Server Health Check ===');
-  
+
   try {
     const response = await fetch(BASE_URL);
     const data = await response.json();
@@ -205,7 +204,7 @@ async function testServerHealth() {
  */
 async function testFreePlan() {
   console.log('\n=== Test 6: Create Free Plan Order ===');
-  
+
   try {
     const response = await fetch(`${API_URL}/create-paypal-order`, {
       method: 'POST',
@@ -267,17 +266,17 @@ async function runAllTests() {
   const orderId = await testCreatePayPalOrder();
   await testGetPayPalOrderStatus(orderId);
   await testDebugPayPalOrderStatus(orderId);
-  
+
   const freeOrderId = await testFreePlan();
   await testGetPayPalOrderStatus(freeOrderId);
-  
+
   // Upgrade test (may fail if event doesn't exist)
   await testCreatePayPalUpgradeOrder();
 
   console.log('\n╔═══════════════════════════════════════════════════════╗');
   console.log('║                  Tests Completed                       ║');
   console.log('╚═══════════════════════════════════════════════════════╝');
-  
+
   console.log('\nNext Steps:');
   console.log('1. Update AUTH_TOKEN with a valid Firebase token');
   console.log('2. Update testPlanId with an actual plan ID from Firestore');

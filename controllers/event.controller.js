@@ -190,6 +190,12 @@ export const createCompleteEvent = async (req, res) => {
     // console.log('req.files.overlay[0]', req.files.overlay[0]);
 
     if (typeof data.overlay === 'string') {
+      // Validate overlay ID to prevent Firestore path errors
+      if (!data.overlay || data.overlay.includes('/') || data.overlay.trim() === '') {
+        console.warn('Invalid overlay ID format received:', data.overlay);
+        return res.status(400).json({ error: 'Invalid overlay ID format. IDs cannot contain slashes or be empty.' });
+      }
+
       // CASE 1: ID from frontend
       const existingOverlayDoc = await db.collection('adminOverlays').doc(data.overlay).get();
 
