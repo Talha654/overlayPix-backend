@@ -74,6 +74,7 @@ const eventSchema = Joi.object({
 
   // Separate overlay name field
   overlayName: Joi.string().allow('').optional(),
+  hostName: Joi.string().allow('').optional(),
 
   // Branding
   brandColor: Joi.string().allow('').optional(),
@@ -842,6 +843,7 @@ export const createCompleteEvent = async (req, res) => {
       overlayId,
       overlayUrl: typeof overlayUrl === 'undefined' ? null : overlayUrl,
       overlayName: data.overlayName || null,
+      hostName: data.hostName || null,
       planId,
       basePlanName, // Add basePlanName to event document
       customPlan,
@@ -1181,8 +1183,10 @@ export const getEventDashboard = async (req, res) => {
         photosCount: e.photosCount,
         guestsCount: e.guestsCount,
         storageDays: storageDays,
+        storageDays: storageDays,
         storageDuration: storageDuration, // <-- keep storageDuration for compatibility
-        storageExpired: !!storageExpired
+        storageExpired: !!storageExpired,
+        hostName: e.hostName || null
       };
     });
 
@@ -1349,7 +1353,7 @@ export const updateEvent = async (req, res) => {
     const allowedFields = [
       'name', 'type', 'eventDate', 'customPlan', 'eventStartTime', 'eventEndTime',
       'timeZone', 'brandColor', 'typography', 'fontStyle', 'fontSize',
-      'eventPictureUrl', 'overlayId', 'overlayUrl', 'overlay', 'overlayName'
+      'eventPictureUrl', 'overlayId', 'overlayUrl', 'overlay', 'overlayName', 'hostName'
     ];
 
     // For PATCH requests, any restricted field present should be blocked
