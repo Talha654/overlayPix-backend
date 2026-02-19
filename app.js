@@ -21,6 +21,13 @@ import eventPageRoutes from "./routes/admin/EventPage.route.js";
 import userManagementRoutes from "./routes/admin/userManagement.route.js";
 import auditRoutes from "./routes/admin/audit.route.js";
 import discountCodeRoutes from "./routes/admin/discountcode.route.js";
+import { createRequire } from 'module';
+import { createRequire } from 'module';
+
+var require = createRequire(import.meta.url);
+var module = { exports: {} };
+
+const require = createRequire(import.meta.url);
 
 dotenv.config();
 
