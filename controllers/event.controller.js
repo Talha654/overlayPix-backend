@@ -283,8 +283,18 @@ export const createCompleteEvent = async (req, res) => {
       // that the USER PAID that `finalPrice` via RevenueCat.
       // So we construct a dummy plan that allows the `computeAmountFromPlan` or we SKIP
       // `computeAmountFromPlan` for RC and just verify payment amount matches `finalPrice`.
+      const planNameMap = {
+        'starter_event': 'Starter Event',
+        'classic_event': 'Classic Event',
+        'celebration_event': 'Celebration Event',
+        'grand_event': 'Grand Event',
+        'ultimate_event': 'Ultimate Event'
+      };
+
+      const readablePlanName = planNameMap[planId] || planId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
       plan = {
-        name: planId, // Use the product ID as the name
+        name: readablePlanName, // Use the readable name
         price: 0, // Base price 0, everything is add-on or base package price?
         // actually, for RC, the "plan" implies the base configuration.
         // If we want to validate price, we need to know the unit costs.
@@ -296,7 +306,7 @@ export const createCompleteEvent = async (req, res) => {
         photoPoolLimitIncreasePricePerPhoto: 0,
         storageOptions: [{ days: customPlan.storageDays, price: 0 }]
       };
-      basePlanName = planId;
+      basePlanName = readablePlanName;
 
     } else {
       console.log('Doing standard DB plan lookup for planId:', planId);
